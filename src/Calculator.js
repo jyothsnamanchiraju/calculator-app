@@ -1,10 +1,5 @@
 import React, {Component} from "react"; 
-//import TableCell from '@material-ui/core/TableCell'; 
-import { Button, Divider } from "@material-ui/core"; 
-//import { fa-divide } from "@fortawesome/free-solid-svg-icons"; 
-//import Icon  from "@mui/material/Icon";
-//import { FontAwesomeIcon } from  "@fortawesome/react-fontawesome"; 
-//import { mdiDivision } from '@mdi/js';
+import {Button}  from "@material-ui/core"; 
 import Division from 'mdi-material-ui/Division'; 
 import Multiplication from 'mdi-material-ui/Multiplication'; 
 import Plus from 'mdi-material-ui/Plus'; 
@@ -20,133 +15,89 @@ class Calculator extends Component{
         this.state = {
             operationValue:"",
             answer:0,
-            number:0,
-            //number2:0,
+            num1:0,
+            num2:0,
             operator:""
         }
     }
 
+    /** Below function clears the answer space */
     clearAnswerHandler=()=>{
-        this.setState({answer:0, number:0, operator:"", operationValue:""}); 
+        this.setState({answer:0, num1:0, operator:"", operationValue:""}); 
     }
 
+    /*Below function is invoked to create numbers and displayed on screen when a digit is pressed.*/ 
     numberHandler=(e)=>{
         
         var num = (this.state.answer)*10; 
-        num = num + e; 
-        this.setState({answer:num}); //, number: num});
-    }
+            num = num + e; 
 
-    operatorHandler=(o)=>{
-     /*  //console.log("inside operator handler", o); 
-        var n1 = this.state.answer;
-        var operation = this.state.answer + " " +o; 
-       // console.log("n1= ",n1," operation = ",operation); 
-        this.setState({number : n1}); 
-        this.setState({operationValue: operation}); 
-        this.setState({answer: this.state.number});*/ 
-
-        var n1 = this.state.number;     
-        var n2 = this.state.answer;
-        if(o === "+"){
-          if(this.state.number===0){
-                this.setState({ number:n2,
-                                operationValue: n2+"+",
-                                answer:0,
-                                operator:"+"});
-          }
-          else
-            this.setState({                
-                operationValue: n1+o+n2,
-                number: n1+n2, 
-                answer: 0,
-                operator:"",
-            })
+        if(this.state.num1 ===0){
+            this.setState({answer:num, num1: num});
+            }
+        else {
+            this.setState({answer:num, num2: num});
         }
-        else if(o === "-"){ 
-            if(this.state.number === 0){
-                this.setState({ number:n2, 
-                                operationValue: n2+"-", 
-                                answer:0, 
-                                operator:"-"});
-            }
-            else
-            this.setState({
-                operationValue: n1+o+n2,
-                number: n1-n2, 
-                answer:0,
-                operator:"" 
-            });
-        }
-        else if(o === "*"){
-            if(this.state.number===0){
-                this.setState({
-                    number:n2,
-                    operationValue: n2+"*",
-                    answer:0,
-                    operator:"*"
-                });
-            }
-            else
-                this.setState({
-                    operationValue: n1+o+n2,
-                    number: n1*n2, 
-                    answer:0,
-                    operator:""
-                })
-        }
-        else if(o==="/"){
-                if(this.state.number===0){
-                    this.setState({
-                        number:n2,
-                        operationValue: n2+"/",
-                        answer:0,
-                        operator:"/"
-                    });
-                }
-                else
-                    this.setState({
-                        operationValue: n1+o+n2,
-                        number: n1/n2,
-                        answer:0,
-                        operator:"/"
-                    });
-        }
-        else if(o==="="){
-            if(this.state.operator ==="+"){
-                this.setState({number: n1+n2, answer:0, operationValue: n1+n2, operator:""});
-            }
-            else if(this.state.operator ==="-"){
-                this.setState({number: n1-n2, answer:0, operationValue: n1-n2, operator:""});
-            }
-            else if(this.state.operator ==="*"){
-                this.setState({number: n1*n2, answer:0, operationValue: n1*n2, operator:""});
-            }
-            else if(this.state.operator ==="/"){
-                if(n2===0)
-                    this.setState({operationValue:"invalid operation"}); 
-                else    
-                this.setState({number: n1/n2, answer:0, operationValue: n1/n2, operator:""});
-            }
-        }
-
         
     }
+
+    /** This function is invoked upon clicking an operator */
+    operatorHandler=(o)=>{
+
+        var n1 = this.state.num1;     
+        var n2 = this.state.num2;
+        var op = this.state.operator;
+        var ans = this.state.answer; 
+
+       if((this.state.num2!==0 && this.state.operator!=="")){
+            if(this.state.operator==="+"){
+                this.setState({answer: n1+n2});
+                ans =n1+n2;
+            }
+            else if(this.state.operator ==="-"){
+                this.setState({answer:n1-n2}); 
+                ans= n1-n2;
+            }
+            else if(this.state.operator ==="*"){
+                this.setState({answer: n1*n2}); 
+                ans= n1*n2; 
+            }
+            else if(this.state.operator ==="/"){
+                this.setState({answer: n1/n2}); 
+                ans= n1/n2; 
+            }
+           this.setState({num1:0, num2:0, operationValue: n1+op+n2+"="});
+
+           if(o!== "=")
+                this.setState({operator:o, num1: ans, answer:0});
+           else 
+                this.setState({operator:""});     
+        }
+       else{
+            this.setState({num1:ans, num2:0, answer:0, operator:o, operationValue:ans});
+        } 
+        
+    }
+
+
     render(){
         return(
             <div className='board'> 
                                 
                 <div className="answer-row" >
-                    <TextField disabled id="operation" value={this.state.operationValue} className="operation">{this.state.operationValue}</TextField>
-                   {this.state.answer === 0 ? (
-                            <TextField disabled id="answer" value={this.state.number} className="answer" > 
-                                    {this.state.number} 
-                            </TextField>)
-                            :
-                            <TextField disabled id="answer" value={this.state.answer} className="answer" > 
-                                    {this.state.answer} 
-                            </TextField>
-                            }
+                    <TextField disabled id="operation" value={this.state.operationValue} className="operation">
+                                {this.state.operationValue}
+                    </TextField>
+                    { (this.state.answer===0)? (
+                    <TextField disabled id="answer" value={this.state.num1} className="answer" > 
+                                {this.state.num1} 
+                    </TextField>)
+                    : (
+                        <TextField disabled id="answer" value={this.state.answer} className="answer" > 
+                                {this.state.answer} 
+                        </TextField>
+                    )
+                    }
                     
                 </div>
                 <div className="row" id="row1">
