@@ -66,12 +66,12 @@ class Calculator extends Component{
                 this.setState({answer: n1/n2}); 
                 ans= n1/n2; 
             }
-           this.setState({num1:0, num2:0, operationValue: n1+op+n2+"="});
+            this.setState({num1:0, num2:0, operationValue: n1+op+n2+"="});
 
            if(o!== "=")
                 this.setState({operator:o, num1: ans, answer:0});
            else 
-                this.setState({operator:""});     
+                this.setState({operator:"", num1:0, num2:0});     
         }
        else{
             this.setState({num1:ans, num2:0, answer:0, operator:o, operationValue:ans});
